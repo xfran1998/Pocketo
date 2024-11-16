@@ -53,4 +53,7 @@ max nº cartas en manos son 10
 cada turno se genera 1 energia (sino se asigna se pierde)
 el turno acaba al atacar o al acabar turno
 el primer entrenador empieza por sorteo
-el primer entrenado
+el primer entrenado no genera energia en el primer turno (puede atacar si consigue energia de otra forma)
+no puedes evolucionar un pokemon si lo acabas de bajar ese turno o si acaba de ser evolucionado
+puedes evolucionar tantos pokemon como quieras
+condicion especial impide atacar o retirar pokemon

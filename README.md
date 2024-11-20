@@ -1,6 +1,6 @@
-# Pokémon TCG Pocket (Educacional) 🎴🎮✨
+# Poketo (Educacional) 🎴🎮✨
 
-Una recreación educativa del clásico juego de cartas Pokémon TCG, desarrollada en TypeScript para ejecutarse en terminales. 🚀 Este proyecto busca explorar conceptos básicos del juego. 🃏🎯
+Una recreación educativa del juego Pokémon TCG Pocket, desarrollada en TypeScript para ejecutarse en terminales. 🚀 Este proyecto busca explorar conceptos básicos del juego. 🃏🎯
 
 ---
 

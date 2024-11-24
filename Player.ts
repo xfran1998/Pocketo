@@ -1,11 +1,15 @@
-
 import GameManager from './GameManager';
 import Pokemon from './Pokemon';
 import PokeTypes from './contants/PokeTypes';
+import { SetEnergy } from './types/Energy';
 
 class Player {
     private deck: Pokemon[] = [];
     private hand: Pokemon[] = [];
+    private readonly generableEnergyTypes: SetEnergy = new Set<PokeTypes>([
+        PokeTypes.FIRE,
+        PokeTypes.WATER,
+    ]);
 
     constructor(deck: Pokemon[]) {
         this.deck = [...deck];
@@ -51,7 +55,17 @@ class Player {
         }
     }
 
-    
+    generateTurnEnergy(): PokeTypes {
+        const index = Math.floor(Math.random() * this.generableEnergyTypes.size);
+
+        const it = this.generableEnergyTypes.values();
+
+        for (let i = 0; i < index; i++) {
+            it.next();
+        }
+        
+        return it.next().value;
+    }    
 }
 
 export default Player;

@@ -2,6 +2,7 @@ import Attack from "./Attack";
 import PokeTypes from "./contants/PokeTypes";
 import EnergyManager from "./EnergyManager";
 import BoardPositions from "./contants/BoardPositions";
+import { MultipleEnergy } from "./types/Energy";
 
 class Pokemon {
     private _name: string;
@@ -11,7 +12,7 @@ class Pokemon {
     private _energyAttached: EnergyManager;
     private _weakness: PokeTypes | null = null; // Can be null
     private _resistance: PokeTypes | null = null;
-    private _retreatCost: PokeTypes[] = [];
+    private _retreatCost: MultipleEnergy;
     private _boardPosition: BoardPositions;
 
     constructor(
@@ -20,7 +21,7 @@ class Pokemon {
         attacks: Attack[] = [], 
         weakness: PokeTypes | null = null,
         resistance: PokeTypes | null = null,
-        retreatCost: PokeTypes[] = [],
+        retreatCost: MultipleEnergy = new Map(),
         isBasic: boolean = false,
         boardPosition: BoardPositions = BoardPositions.DECK
     ) {
@@ -35,21 +36,20 @@ class Pokemon {
         this._boardPosition = boardPosition;
     }
 
-    useAttack(index: number): boolean {
+    useAttack(index: number): void {
         if (index < 0 || index >= this._attacks.length) {
             console.error(`${this._name} doesn't have attack number ${index + 1}!`);
-            return false;
+            throw new Error('Invalid attack index');
         }
 
         const attack = this._attacks[index];
         if (!this._energyAttached.hasEnough(attack.energyRequirements)) {
             console.error(`${this._name} doesn't have enough energy for ${attack.name}!`);
-            return false;
+            throw new Error('Not enough energy');
         }
 
-        this._energyAttached.consumeEnergy(attack.energyRequirements);
+        this._energyAttached.removeMultipleEnergy(attack.energyRequirements);
         console.log(`${this._name} used ${attack.name}!`);
-        return true;
     }
 
     // Getters
@@ -78,8 +78,8 @@ class Pokemon {
         return this._energyAttached.toArray(); // Using toArray instead of getEnergies
     }
 
-    get retreatCost(): PokeTypes[] {
-        return [...this._retreatCost]; // Return copy to prevent direct modification
+    get retreatCost(): MultipleEnergy {
+        return new Map(this._retreatCost); // Return copy to prevent direct modification
     }
 
     get isBasic(): boolean {
@@ -114,6 +114,17 @@ class Pokemon {
             this._energyAttached.hasEnough(attack.energyRequirements)
         );
     }
+    
+    retreat(): boolean {
+        return this._energyAttached.removeMultipleEnergy(this._retreatCost);
+    }
+
+    evolve(pokemon: Pokemon): boolean {
+    }
+
+    // Interface methods
+
+
 }
 
 export default Pokemon;

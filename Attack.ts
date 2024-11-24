@@ -1,19 +1,20 @@
 import PokeTypes from "./contants/PokeTypes";
 import EnergyManager from "./EnergyManager";
+import { MultipleEnergy } from "./types/Energy";
 
 class Attack {
     private _damage: number;
     private _name: string;
-    private _energyRequirements: EnergyManager;
+    private _energyRequirements: MultipleEnergy;
     
     constructor(
         damage: number, 
         name: string, 
-        energyRequirements: PokeTypes[] = []
+        energyRequirements: MultipleEnergy = new Map() 
     ) {
         this._damage = damage;
         this._name = name;
-        this._energyRequirements = new EnergyManager(energyRequirements);
+        this._energyRequirements = energyRequirements;
     }
     
     get damage(): number {
@@ -24,7 +25,7 @@ class Attack {
         return this._name;
     }
 
-    get energyRequirements(): EnergyManager {
+    get energyRequirements(): MultipleEnergy {
         return this._energyRequirements;
     }
 }

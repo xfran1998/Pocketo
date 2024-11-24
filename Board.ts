@@ -2,6 +2,8 @@ import Player from './Player';
 import Pokemon from './Pokemon';
 import BoardPositions from './contants/BoardPositions';
 import GameManager from './GameManager';
+import { PlayerIndex } from './types/Players';
+import { BenchRows } from './types/Board';
 
 class InvalidPlayerError extends Error {
     constructor(message: string) {
@@ -10,10 +12,6 @@ class InvalidPlayerError extends Error {
     }
 }
 
-type FixedArray<T, N extends number> = T[] & { readonly length: N };
-type BenchRow = FixedArray<Pokemon | null, typeof GameManager.BENCH_SIZE>;
-type PlayerIndex = 0 | 1;
-
 class Board {
     private readonly player1: Player;
     private readonly player2: Player;
@@ -21,7 +19,7 @@ class Board {
     private activePlayer: PlayerIndex = 0;
 
     private readonly activePokemon: [Pokemon | null, Pokemon | null] = [null, null];
-    private readonly benchedPokemon: FixedArray<BenchRow, 2> = [
+    private readonly benchedPokemon: BenchRows = [
         [null, null, null],
         [null, null, null]
     ];
@@ -46,6 +44,10 @@ class Board {
 
     getActivePlayer(): Player {
         return this.activePlayer === 0 ? this.player1 : this.player2;
+    }
+
+    getActivePokemon(): Pokemon | null {
+        return this.activePokemon[this.activePlayer];
     }
 
     getNonActivePlayer(): Player {

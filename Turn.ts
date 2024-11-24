@@ -2,31 +2,45 @@
 import Player from './Player';
 import Pokemon from './Pokemon';
 import PokeTypes from './contants/PokeTypes';
+import { PokeTurns } from './types/Energy';
 
 class Turn {
-    private player: Player;
+    private static turnCount: number = 1;
+    private activePlayer: Player;
     private hasAttacked: boolean = false;
-    private energyGenerated: boolean = false;
+    private hasPassed: boolean = false;
+    private energyTaken: boolean = false;
+    private energyTypeGenerable: PokeTurns;
 
     constructor(player: Player) {
-        this.player = player;
+        this.activePlayer = player;
+        Turn.turnCount++;
+        this.generateEnergy();
     }
 
-    generateEnergy(): boolean {
-        if (!this.energyGenerated) {
-            this.energyGenerated = true;
-            return true;
+    generateEnergy(): void {
+        let currentTurnEnergy: PokeTypes;
+        if (this.isFirstTurn()) {
+            currentTurnEnergy = this.activePlayer.generateTurnEnergy();
         }
-        return false;
+        else {
+            currentTurnEnergy = this.energyTypeGenerable[1];
+        }
+        
+        const nextEnergy = this.activePlayer.generateTurnEnergy();
+        this.energyTypeGenerable = [currentTurnEnergy, nextEnergy];
     }
 
-    attack(attackIndex: number): boolean {
-        if (!this.hasAttacked) {
-            // Implement attack logic
-            this.hasAttacked = true;
-            return true;
-        }
-        return false;
+    isFirstTurn(): boolean {
+        return Turn.turnCount <= 2;
+    }
+
+    attack(attackIndex: number): void {
+        this.hasAttacked = true;
+    }
+
+    pass(): void {
+        this.hasPassed = true;
     }
 
     isFinished(): boolean {

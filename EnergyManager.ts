@@ -1,7 +1,8 @@
 import PokeTypes from "./contants/PokeTypes";
+import { MultipleEnergy } from "./types/Energy";
 
 class EnergyManager {
-    private _energies: Map<PokeTypes, number> = new Map();
+    private _energies: MultipleEnergy = new Map();
 
     constructor(energies: PokeTypes[] = []) {
         energies.forEach(energy => this.addEnergy(energy));
@@ -13,32 +14,37 @@ class EnergyManager {
 
     removeEnergy(type: PokeTypes): boolean {
         const count = this._energies.get(type) || 0;
+
         if (count > 0) {
             this._energies.set(type, count - 1);
             return true;
         }
+
         return false;
+    }
+
+    removeMultipleEnergy(energyToRemove: MultipleEnergy): boolean {
+        if (!this.hasEnough(energyToRemove)) return false;
+
+        for (const [type, count] of energyToRemove) {
+            for (let i = 0; i < count; i++) {
+                this.removeEnergy(type)
+            }
+        }
+
+        return true
     }
 
     getCount(type: PokeTypes): number {
         return this._energies.get(type) || 0;
     }
 
-    hasEnough(required: EnergyManager): boolean {
-        for (const [type, count] of required._energies) {
+    hasEnough(required: MultipleEnergy): boolean {
+        for (const [type, count] of required) {
             const available = this._energies.get(type) || 0;
             if (available < count) return false;
         }
         return true;
-    }
-
-    consumeEnergy(required: EnergyManager) {
-        if (!this.hasEnough(required)) return false;
-
-        for (const [type, count] of required._energies) {
-            const available = this._energies.get(type) || 0;
-            this._energies.set(type, available - count);
-        }
     }
 
     toArray(): PokeTypes[] {
